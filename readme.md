@@ -17,7 +17,7 @@ Create a `config.properties` file in the `src/main/resources` directory with the
 
 ```properties
 db.url=jdbc:postgresql://localhost:5432/
-db.user=postgres
-db.password=890??jomo
+db.user=username
+db.password=password
 input.directory=src/main/java/com/khabir/data/input
 ```
