@@ -1,5 +1,10 @@
 package com.khabir.factory;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -9,13 +14,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 /**
  * OrderGenerator class to generate sample orders.
  */
 public class OrderGenerator {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderGenerator.class);
+
     public static void main(String[] args) {
         // Number of orders to create
         int numberOfOrders = 10;
@@ -43,9 +48,9 @@ public class OrderGenerator {
         try (FileWriter file = new FileWriter("src/main/java/com/khabir/data/input/" + fileName)) {
             JSONArray jsonArray = new JSONArray(orders);
             file.write(jsonArray.toString(4)); // Indented for better readability
-            System.out.println("Orders have been written to input/ dir");
+            logger.info("Orders have been written to input/ dir");
         } catch (IOException e) {
-            System.err.println("An error occurred while writing the JSON file: " + e.getMessage());
+            logger.error("An error occurred while writing the JSON file: {}", e.getMessage());
         }
     }
 }

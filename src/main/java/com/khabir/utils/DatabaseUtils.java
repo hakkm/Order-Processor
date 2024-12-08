@@ -1,20 +1,41 @@
 package com.khabir.utils;
 
 import com.khabir.models.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Properties;
 
 public class DatabaseUtils {
 
-  private static final String DB_URL = "jdbc:postgresql://localhost:5432/";
-  private static final String DB_USER = "postgres";
-  private static final String DB_PASSWORD = "890??jomo";
+  private static final Logger logger = LoggerFactory.getLogger(DatabaseUtils.class);
+  private static final String DB_URL;
+  private static final String DB_USER;
+  private static final String DB_PASSWORD;
+
+  static {
+    Properties properties = new Properties();
+    try (InputStream input = DatabaseUtils.class.getClassLoader().getResourceAsStream("config.properties")) {
+      if (input == null) {
+        throw new IOException("Unable to find config.properties");
+      }
+      properties.load(input);
+    } catch (IOException ex) {
+      throw new ExceptionInInitializerError("Failed to load database configuration");
+    }
+    DB_URL = properties.getProperty("db.url");
+    DB_USER = properties.getProperty("db.user");
+    DB_PASSWORD = properties.getProperty("db.password");
+  }
 
   public static boolean createTables() {
     // SQL to create 'customers' table if it doesn't exist
@@ -36,13 +57,13 @@ public class DatabaseUtils {
         Statement statement = connection.createStatement()) {
 
       statement.executeUpdate(createCustomersTableSQL);
-      System.out.println("Table 'customer' created successfully or already exists.");
+      logger.info("Table 'customer' created successfully or already exists.");
 
       statement.executeUpdate(createOrdersTableSQL);
-      System.out.println("Table 'orders' created successfully or already exists.");
+      logger.info("Table 'orders' created successfully or already exists.");
 
     } catch (SQLException e) {
-      System.err.println("Error creating tables: " + e.getMessage());
+      logger.error("Error creating tables: {}", e.getMessage());
       return false;
     }
     return true;
@@ -57,7 +78,7 @@ public class DatabaseUtils {
         return resultSet.next();
       }
     } catch (SQLException e) {
-      System.err.println("Database error: " + e.getMessage());
+      logger.error("Database error: {}", e.getMessage());
       return false;
     }
   }
@@ -73,14 +94,10 @@ public class DatabaseUtils {
         preparedStatement.setInt(4, order.getCustomer_id());
         preparedStatement.executeUpdate();
       }
-      System.out.println("Orders added to the database successfully.");
+      logger.info("Orders added to the database successfully.");
     } catch (SQLException e) {
-      System.err.println("Failed to add orders to the database: " + e.getMessage());
+      logger.error("Failed to add orders to the database: {}", e.getMessage());
       e.printStackTrace();
     }
-  }
-
-  public static void main(String[] args) {
-    createTables();
   }
 }
