@@ -14,6 +14,6 @@ import java.sql.Date;
 public class Order {
     private Date date;
     private double amount;
-    private int id;
+    private String id;
     private int customer_id;
 }
