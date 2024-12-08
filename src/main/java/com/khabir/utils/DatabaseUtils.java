@@ -100,4 +100,8 @@ public class DatabaseUtils {
       e.printStackTrace();
     }
   }
+
+  public static void main(String[] args) {
+    createTables();
+  }
 }

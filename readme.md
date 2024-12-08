@@ -21,3 +21,19 @@ db.user=username
 db.password=password
 input.directory=src/main/java/com/khabir/data/input
 ```
+
+## Usage
+
+### 1. Set Up the Database
+
+In order to create the databases, run the DatabaseUtils class. This will create the `orders` and `customer` tables in the PostgreSQL database.
+
+### 2. Generate Inputs Automatically
+
+To generate sample order inputs automatically, run the OrderGenerator class. This will create JSON files with sample orders in the input directory specified in the configuration. You can modify the input files to make them invalid and test the error handling of the OrderReader program.
+
+### 3. Run the Program
+
+Run the OrderReader program, which reads the order data from JSON files, validates customer IDs, and stores the orders in the PostgreSQL database.
+
+The OrderReader program will continuously monitor the input directory for new JSON files, process them, and move them to the appropriate directories based on their validity.
